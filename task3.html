@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSS Quiz & Joke Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      color: #333;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 20px;
+      margin: 10px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .section {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .visible {
+      display: block;
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      background-color: #1abc9c;
+    }
+
+    .options button:hover {
+      background-color: #16a085;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .joke-text {
+      font-size: 18px;
+      margin-top: 15px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎨 CSS Quiz & 😂 Joke Generator</h1>
+    <button onclick="showSection('quiz')">Start Quiz</button>
+    <button onclick="showSection('joke')">Show Joke</button>
+
+    <!-- Quiz Section -->
+    <div id="quiz" class="section">
+      <div class="question" id="quiz-question">Question will appear here</div>
+      <div class="options" id="quiz-options"></div>
+      <div class="result" id="quiz-result"></div>
+    </div>
+
+    <!-- Joke Section -->
+    <div id="joke" class="section">
+      <div class="joke-text" id="joke-text">Click the button below for a funny joke!</div>
+      <button onclick="generateJoke()">New Joke</button>
+    </div>
+  </div>
+
+  <script>
+    const cssQuiz = [
+      {
+        question: "What does CSS stand for?",
+        options: ["Computer Style Sheets", "Cascading Style Sheets", "Creative Style Syntax", "Colorful Style Sheets"],
+        answer: "Cascading Style Sheets"
+      },
+      {
+        question: "Which property changes the background color?",
+        options: ["color", "bgcolor", "background-color", "background"],
+        answer: "background-color"
+      },
+      {
+        question: "How do you make text bold?",
+        options: ["font-weight: bold;", "font: bold;", "weight: bold;", "style: bold;"],
+        answer: "font-weight: bold;"
+      },
+      {
+        question: "What is the default position in CSS?",
+        options: ["absolute", "relative", "static", "fixed"],
+        answer: "static"
+      }
+    ];
+
+    const jokes = [
+      "Why don’t web designers like to go outside? The sunlight causes too much contrast!",
+      "Why did the HTML and CSS break up? Because they had too many style issues!",
+      "What’s a web developer’s favorite tea? Proper-tea!",
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function showSection(id) {
+      document.getElementById('quiz').classList.remove('visible');
+      document.getElementById('joke').classList.remove('visible');
+      document.getElementById(id).classList.add('visible');
+
+      if (id === 'quiz') {
+        currentQuestionIndex = 0;
+        loadQuizQuestion();
+      }
+    }
+
+    function loadQuizQuestion() {
+      const q = cssQuiz[currentQuestionIndex];
+      document.getElementById('quiz-question').textContent = q.question;
+      const optionsDiv = document.getElementById('quiz-options');
+      optionsDiv.innerHTML = '';
+
+      q.options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option);
+        optionsDiv.appendChild(btn);
+      });
+
+      document.getElementById('quiz-result').textContent = '';
+    }
+
+    function checkAnswer(selected) {
+      const correct = cssQuiz[currentQuestionIndex].answer;
+      const result = document.getElementById('quiz-result');
+      if (selected === correct) {
+        result.textContent = "✅ Correct!";
+      } else {
+        result.textContent = `❌ Wrong! Correct: ${correct}`;
+      }
+
+      currentQuestionIndex = (currentQuestionIndex + 1) % cssQuiz.length;
+      setTimeout(loadQuizQuestion, 1500);
+    }
+
+    function generateJoke() {
+      const joke = jokes[Math.floor(Math.random() * jokes.length)];
+      document.getElementById('joke-text').textContent = joke;
+    }
+
+    // Auto-load first quiz question if quiz section is opened first
+    window.onload = () => {
+      loadQuizQuestion();
+    };
+  </script>
+</body>
+</html>
